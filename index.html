@@ -184,6 +184,17 @@
   .footnote { margin: 12px 0 0; font-size: 13px; color: var(--muted); max-width: 72ch; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (min-width: 720px) { .pillars.claims { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 720px) { .pillars.claims.four-up { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .pillars.claims.four-up { grid-template-columns: repeat(4, 1fr); } }
+  .vs-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .vs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .vs-grid { grid-template-columns: repeat(3, 1fr); } }
+  .vs h3 { margin-bottom: 12px; }
+  .vs dl { margin: 0; display: grid; gap: 10px; }
+  .vs dt { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .vs dd { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+  .vs dd.adds { color: var(--text); border-left: 3px solid var(--accent); padding-left: 10px; }
+  .vs dt.adds { color: var(--accent); }
 
   section { padding: 56px 0; border-top: 1px solid var(--border); }
   section h2 { font-size: clamp(24px, 3.4vw, 32px); letter-spacing: -0.01em; margin: 0 0 10px; }
@@ -411,9 +422,10 @@ ORDERS-DB   +$578.92/mo (affected)
         <p class="kicker">Why CostTrace</p>
         <h2>Designed for a different question.</h2>
         <p class="sub">CostTrace is a local-first tool that measures how the changes you ship coincide with changes in your actual cloud bill, using your own FOCUS data, in your own CI. Estimators ask what a change <em>should</em> cost; budgets ask whether spend moved; FinOps platforms ask where the money went. CostTrace asks, right in the pull request: <strong>what did this change actually do to the real bill?</strong></p>
-        <div class="pillars claims">
+        <div class="pillars claims four-up">
           <div class="card"><h3>Measured, not guessed</h3><p>What each change actually cost, read from your bill with your negotiated rates, not list-price estimates.</p></div>
           <div class="card"><h3>Per pull request, even for code</h3><p>Cost changes are lined up with the deploys they coincide with, including changes with no infrastructure diff at all.</p></div>
+          <div class="card"><h3>Down to the code path</h3><p>With your OpenTelemetry traces, the cost change is followed to the queries and calls that changed, with file and function.</p></div>
           <div class="card"><h3>Transparent numbers</h3><p>Runs on your own FOCUS export in your CI, and every figure comes with a ± range and a documented method.</p></div>
         </div>
         <div class="table-scroll matrix-scroll">
@@ -432,6 +444,22 @@ ORDERS-DB   +$578.92/mo (affected)
           </table>
         </div>
         <p class="footnote">✓ yes · ◐ partly, or only in some products · — not its focus. Categories, not specific products, as of October 2026; individual products vary, and some FinOps platforms now offer cost per deployment. CostTrace works alongside them: when a budget alert fires, it shows which deploys coincide with the change.</p>
+      </div>
+    </section>
+
+    <section id="differs">
+      <div class="wrap">
+        <p class="kicker">How it differs</p>
+        <h2>Alongside the tools you already use</h2>
+        <p class="sub">Each kind of cost or monitoring tool answers part of the question. CostTrace fills the gap between them: measured cost, per change, back to the code. It doesn't replace them.</p>
+        <div class="vs-grid">
+          <div class="card vs"><h3>Pre-merge cost estimators</h3><dl><dt>Good at</dt><dd>Pricing new and resized infrastructure from your IaC diff, before merge.</dd><dt class="adds">CostTrace adds</dt><dd class="adds">What the change really cost once running, at your negotiated rates, including usage-driven charges and code-only changes an estimate prices at $0. And estimate vs. actual, so you learn how good the estimates are.</dd></dl></div>
+          <div class="card vs"><h3>Cloud budgets &amp; anomaly alerts</h3><dl><dt>Good at</dt><dd>Telling you quickly that spend on a service or account moved.</dd><dt class="adds">CostTrace adds</dt><dd class="adds">Which deploy and pull request the change coincides with, and how much of it, with a ± range, so the alert has an owner.</dd></dl></div>
+          <div class="card vs"><h3>FinOps platforms</h3><dl><dt>Good at</dt><dd>Allocating spend by team, product or customer, with dashboards for finance.</dd><dt class="adds">CostTrace adds</dt><dd class="adds">Per-change measurement delivered to the engineer on the pull request. It runs on your own export in your own CI, so billing data isn't sent to another company.</dd></dl></div>
+          <div class="card vs"><h3>Observability &amp; APM tools</h3><dl><dt>Good at</dt><dd>Latency, errors and traces: which code path got slower or busier.</dd><dt class="adds">CostTrace adds</dt><dd class="adds">What that change did to the bill. CostTrace reads your existing traces and puts measured dollars next to the queries and calls that changed.</dd></dl></div>
+          <div class="card vs"><h3>AI usage &amp; token trackers</h3><dl><dt>Good at</dt><dd>Counting tokens and spend per model call, once the app is set up to report them.</dd><dt class="adds">CostTrace adds</dt><dd class="adds">The whole bill, not only AI calls, with no changes to your code: an AI model or prompt change shows up next to every other cost it moved.</dd></dl></div>
+        </div>
+        <p class="footnote">Categories, not specific products, as of October 2026. Individual products vary and some overlap with parts of this. If you'd like to compare CostTrace with a tool you use, write to <a href="mailto:founder@costtrace.io">founder@costtrace.io</a>.</p>
       </div>
     </section>
 
