@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CostTrace</title>
-<meta name="description" content="CostTrace reads your real cloud bill and shows which pull request each cost change lines up with, even when the change was only code. On any cloud (AWS, Azure, Google Cloud, Oracle Cloud), with any AI agent.">
+<meta name="description" content="CostTrace reads your real cloud bill and shows which pull request each cost change lines up with, even when the change was only code, and with your traces, which code paths. On any cloud (AWS, Azure, Google Cloud, Oracle Cloud), with any AI agent.">
 <meta property="og:title" content="CostTrace: trace measured cloud cost back to the changes you ship">
 <meta property="og:description" content="Know what every deploy really costs, measured from your real cloud bill. Any cloud, any AI agent.">
 <meta property="og:url" content="https://costtrace.io/">
@@ -259,6 +259,7 @@
     <nav class="links" aria-label="Primary">
       <a class="wide-only" href="#why">Why CostTrace</a>
       <a class="roomy-only" href="#explain">Explain</a>
+      <a class="wide-only" href="#code">Trace to code</a>
       <a class="wide-only" href="#agents">AI agents</a>
       <a class="wide-only" href="#how">How it works</a>
       <a href="#start">Get started</a>
@@ -301,7 +302,7 @@
           <p class="comment-note">Service-level impact: no infrastructure changed, but the database bill rose after the deploy. 3 other checkout resources held steady.</p>
         </div>
       </figure>
-      <p class="caption">An N+1 query with zero infrastructure changes. A pre-merge estimate prices it at $0.</p>
+      <p class="caption">An N+1 query with zero infrastructure changes. A pre-merge estimate prices it at $0. <a href="#code">CostTrace finds the line of code.</a></p>
 
       <div class="agnostic">
         <div class="card">
@@ -364,6 +365,29 @@
       </div>
     </section>
 
+    <section id="code">
+      <div class="wrap">
+        <p class="kicker">costtrace traces</p>
+        <h2>From the bill to the line of code.</h2>
+        <p class="sub">The bill says which resource got more expensive after a deploy. Your OpenTelemetry traces say which code calls it. CostTrace compares the deployed service's traces before and after the deploy, finds the queries and calls that changed per request, and splits the measured cost change across them.</p>
+<pre class="term" aria-label="Example output of costtrace traces"><span class="p">$</span> costtrace traces --traces ./otel-export --changes deploys.json --sha 7d24e0c --focus ./exports
+
+ORDERS-DB   +$578.92/mo (affected)
+  <span class="c">Matched to traced calls by "orders"</span>
+  ≈+$550/mo, 95% of the change:  SELECT * FROM order_line_items WHERE id = ?
+      repeated query (N+1), up to 39× per call site: 0 → 20.2 calls per request
+      at /srv/checkout/app/invoices.py:57 (load_line_items)
+  ≈+$9/mo, 2% of the change:  more requests (traffic)
+  offset by: SELECT * FROM order_line_items WHERE order_id = ? (removed)</pre>
+        <div class="pillars claims" style="margin-top:20px">
+          <div class="card"><h3>Per request, not per day</h3><p>Changes are measured per request to each endpoint, so more traffic is reported as traffic, not blamed on the code.</p></div>
+          <div class="card"><h3>Patterns, with locations</h3><p>Repeated queries (N+1), new calls, more calls and slower calls, each with the file and function from your traces.</p></div>
+          <div class="card"><h3>Your traces, as they are</h3><p>Reads OpenTelemetry exports (OTLP/JSON files) or a Jaeger-compatible query API. No new instrumentation and no agent to install.</p></div>
+        </div>
+        <p class="footnote">Sample data. The resource's change is measured from the bill; the split across code paths is an estimate, because span time stands in for what the resource bills. It ranks where to look and roughly how much is at stake. Confirm a fix by measuring its deploy.</p>
+      </div>
+    </section>
+
     <section id="start">
       <div class="wrap">
         <p class="kicker">Get started</p>
@@ -374,6 +398,7 @@
           <li><h3>Ask why your bill changed</h3><p>Run <code>costtrace explain</code> on any two periods your export covers: usage, rates, new and removed resources, per service. No tags or deploy log needed.</p><span class="when">2 minutes</span></li>
           <li><h3>Get a cost comment on every PR</h3><p>Tag deploys with the commit SHA, then add the GitHub Action. It reads your GitHub deployments, so there's no deploy log to keep.</p><span class="when">15 minutes</span></li>
         </ol>
+        <p class="footnote">Already export OpenTelemetry traces? Point <code>costtrace traces</code> at them to go from a cost change to the code behind it.</p>
 <div class="start-links">
           <a class="btn primary" href="mailto:founder@costtrace.io?subject=CostTrace%20early%20access">Request early access</a>
           <span class="cta-note" style="margin:0">Write to <a href="mailto:founder@costtrace.io">founder@costtrace.io</a>. We'll run it on your own billing export with you.</span>
@@ -398,6 +423,7 @@
               <tr><th scope="row">Measured from your actual bill, with your discounts</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="yes" aria-label="Yes">✓</span></td><td><span class="yes" aria-label="Yes">✓</span></td></tr>
               <tr><th scope="row">Correlates cost changes with deploys and pull requests</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
               <tr><th scope="row">Catches cost from application code, not just infrastructure</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
+              <tr><th scope="row">Points to the code paths behind a cost change, from your traces</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
               <tr><th scope="row">Estimate vs. actual for each change</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
               <tr><th scope="row">Delivered to the engineer, on the PR</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
               <tr><th scope="row">Runs on your own billing export, in your environment</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
@@ -405,7 +431,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footnote">✓ yes · ◐ partly, or only in some products · — not its focus. Categories, not specific products, as of September 2026; individual products vary, and some FinOps platforms now offer cost per deployment. CostTrace works alongside them: when a budget alert fires, it shows which deploys coincide with the change.</p>
+        <p class="footnote">✓ yes · ◐ partly, or only in some products · — not its focus. Categories, not specific products, as of October 2026; individual products vary, and some FinOps platforms now offer cost per deployment. CostTrace works alongside them: when a budget alert fires, it shows which deploys coincide with the change.</p>
       </div>
     </section>
 
@@ -413,10 +439,10 @@
       <div class="wrap">
         <p class="kicker">AI-native</p>
         <h2>Ask any coding agent what a change cost</h2>
-        <p class="sub">CostTrace ships an <a href="https://modelcontextprotocol.io">MCP</a> server, an open standard that agents and editors support, so whichever agent your team uses answers cost questions with numbers measured from your bill instead of guesses, and can trace a spike back to the deploys and diffs it coincides with.</p>
+        <p class="sub">CostTrace ships an <a href="https://modelcontextprotocol.io">MCP</a> server, an open standard that agents and editors support, so whichever agent your team uses answers cost questions with numbers measured from your bill instead of guesses, and can trace a spike back to the deploys it coincides with and the code paths in your traces.</p>
         <div class="chat" aria-label="Example conversation with a coding agent using CostTrace">
           <div class="msg you"><span class="who">You</span>What did commit 7d24e0c cost, and why?</div>
-          <div class="msg agent"><span class="who">Agent · via CostTrace</span><strong>+$579/mo ± $52</strong> since it deployed on Sep 18, against an estimate of $0. No infrastructure changed. The cost is service-level: <code>orders-db</code> (AWS RDS) went from $52 to $71 a day. The diff loads order line items one query at a time in the invoice view, an N+1 query. Batching them into a single query should bring it back down.</div>
+          <div class="msg agent"><span class="who">Agent · via CostTrace</span><strong>+$579/mo ± $52</strong> since it deployed on Sep 18, against an estimate of $0. No infrastructure changed. The cost is service-level: <code>orders-db</code> (AWS RDS) went from $52 to $71 a day. Traces from the same days show a new N+1 query at <code>invoices.py:57</code> (<code>load_line_items</code>): about 20 queries per request, ≈ $550/mo of the change by estimate. Batching them into a single query should bring it back down.</div>
         </div>
         <p class="footnote">Example conversation using the sample dataset. Read-only tools. Works with any MCP client.</p>
       </div>
@@ -442,7 +468,7 @@
         <ol class="steps">
           <li><h3>Tag</h3><p>Deploys stamp resources with <code>costtrace_sha</code>, <code>_pr</code>, <code>_repo</code> and <code>_service</code>. One convention that's valid on every cloud.</p></li>
           <li><h3>Measure</h3><p>CostTrace reads your FOCUS export straight from S3, Blob Storage or BigQuery, and your deploys from GitHub deployments or a deploy log, then compares costs before vs. after each deploy.</p></li>
-          <li><h3>Attribute</h3><p>New, changed and removed resources, plus cost shifts from application code in the same service, each with a ± range.</p></li>
+          <li><h3>Attribute</h3><p>New, changed and removed resources, plus cost shifts from application code in the same service, each with a ± range. With traces, down to the queries and calls that changed.</p></li>
           <li><h3>Report</h3><p>A PR comment kept up to date by the GitHub Action, a table, JSON, or a failed CI check when a change blows past its estimate.</p></li>
         </ol>
       </div>
@@ -458,7 +484,7 @@
           <div class="cloud">Google Cloud<small>FOCUS export in BigQuery</small><code>bq://project.dataset.table</code></div>
           <div class="cloud">Oracle Cloud<small>FOCUS cost reports</small><code>./exports</code></div>
         </div>
-        <p class="sub" style="margin:16px 0 0">Reads CSV, gzipped CSV and Parquet, fetching only the columns and billing months a report needs. Two million billing rows take about five seconds.</p>
+        <p class="sub" style="margin:16px 0 0">Reads CSV, gzipped CSV and Parquet, fetching only the columns and billing months a report needs. A large export (millions of billing rows, gzipped) takes a few minutes.</p>
       </div>
     </section>
 
