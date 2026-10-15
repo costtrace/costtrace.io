@@ -7,6 +7,7 @@ Key ideas:
 - Per change: deploys tag resources with costtrace_sha, costtrace_pr, costtrace_repo and costtrace_service. Each change is compared over N days before and after its deploy.
 - Catches application-code cost: unmodified resources of the deployed service whose cost moved are reported as "affected".
 - Every figure has a ± range from day-to-day variation. Shifts within noise are not listed.
+- Traces a cost change to code: compares the deployed service's OpenTelemetry traces (OTLP/JSON files or a Jaeger-compatible API) before and after a deploy, per request, and lists the queries and calls that changed (such as N+1 queries) with their code locations. The resource's cost change is measured; its split across code paths is an estimate based on span time.
 - Explains period-over-period bill changes: usage, rate, new and removed resources, per service; needs no tags.
 - A GitHub Action posts and updates one cost comment per deployed pull request, reading deploys from GitHub deployment records.
 - Not a budget or anomaly alert, and not a pre-merge estimator: it closes the loop between them.
