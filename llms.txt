@@ -1,0 +1,16 @@
+# CostTrace
+
+> CostTrace measures what each deployed code or infrastructure change actually cost, from an organization's real cloud bill, and correlates it with the pull requests and deploys it coincides with (correlation in time, not proof of cause). It compares that with the pre-merge estimate. It is cloud-agnostic (AWS, Azure, Google Cloud and Oracle Cloud via the FinOps FOCUS billing standard), agent-agnostic (an MCP server for any MCP client, plus a CLI and JSON output that need no AI), and runs locally or in CI. Billing data never leaves the user's environment. CostTrace is in early access: contact founder@costtrace.io.
+
+Key ideas:
+- Measured, not estimated: reads FOCUS billing exports, using EffectiveCost (which includes the customer's discounts).
+- Per change: deploys tag resources with costtrace_sha, costtrace_pr, costtrace_repo and costtrace_service. Each change is compared over N days before and after its deploy.
+- Catches application-code cost: unmodified resources of the deployed service whose cost moved are reported as "affected".
+- Every figure has a ± range from day-to-day variation. Shifts within noise are not listed.
+- Explains period-over-period bill changes: usage, rate, new and removed resources, per service; needs no tags.
+- A GitHub Action posts and updates one cost comment per deployed pull request, reading deploys from GitHub deployment records.
+- Not a budget or anomaly alert, and not a pre-merge estimator: it closes the loop between them.
+
+## Contact
+- Early access and questions: founder@costtrace.io
+- Security: security@costtrace.io
