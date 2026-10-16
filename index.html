@@ -169,20 +169,7 @@
   .kicker { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
   .pillars.claims { margin-bottom: 20px; }
   .pillars.claims .card { border-top: 3px solid var(--accent); }
-  table.matrix { background: var(--surface); min-width: 520px; table-layout: fixed; }
-  table.matrix th, table.matrix td { white-space: normal; text-align: center; vertical-align: middle; }
-  table.matrix thead th { font-size: 12px; line-height: 1.3; }
-  table.matrix tbody th { text-align: left; font-weight: 500; font-size: 14px; color: var(--text); text-transform: none; letter-spacing: normal; width: 34%; background: var(--surface); position: sticky; left: 0; z-index: 1; }
-  table.matrix thead th:first-child { position: sticky; left: 0; z-index: 2; background: var(--surface-2); width: 34%; }
-  table.matrix .ours { background: var(--accent-soft); }
-  table.matrix th.ours { text-transform: none; letter-spacing: normal; }
-  table.matrix thead th.ours { color: var(--accent); font-size: 13px; }
-  .yes { color: var(--ok); font-weight: 700; font-size: 17px; }
-  .part { color: var(--muted); font-size: 16px; }
-  .no { color: var(--muted); opacity: .6; }
-  td.ours .yes { color: var(--accent); }
   .footnote { margin: 12px 0 0; font-size: 13px; color: var(--muted); max-width: 72ch; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (min-width: 720px) { .pillars.claims { grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 720px) { .pillars.claims.four-up { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1000px) { .pillars.claims.four-up { grid-template-columns: repeat(4, 1fr); } }
@@ -428,22 +415,6 @@ ORDERS-DB   +$578.92/mo (affected)
           <div class="card"><h3>Down to the code path</h3><p>With your OpenTelemetry traces, the cost change is followed to the queries and calls that changed, with file and function.</p></div>
           <div class="card"><h3>Transparent numbers</h3><p>Runs on your own FOCUS export in your CI, and every figure comes with a ± range and a documented method.</p></div>
         </div>
-        <div class="table-scroll matrix-scroll">
-          <table class="matrix">
-            <thead><tr><th scope="col"><span class="sr">Capability</span></th><th scope="col" class="ours">CostTrace</th><th scope="col">Pre-merge estimators</th><th scope="col">Budgets &amp; anomaly alerts</th><th scope="col">FinOps platforms</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Measured from your actual bill, with your discounts</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="yes" aria-label="Yes">✓</span></td><td><span class="yes" aria-label="Yes">✓</span></td></tr>
-              <tr><th scope="row">Correlates cost changes with deploys and pull requests</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
-              <tr><th scope="row">Catches cost from application code, not just infrastructure</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
-              <tr><th scope="row">Points to the code paths behind a cost change, from your traces</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td></tr>
-              <tr><th scope="row">Estimate vs. actual for each change</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
-              <tr><th scope="row">Delivered to the engineer, on the PR</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="yes" aria-label="Yes">✓</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
-              <tr><th scope="row">Runs on your own billing export, in your environment</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="no" aria-label="Not its focus">—</span></td></tr>
-              <tr><th scope="row">One tool across AWS, Azure, Google Cloud, OCI</th><td class="ours"><span class="yes" aria-label="Yes">✓</span></td><td><span class="part" aria-label="Partly or in some products">◐</span></td><td><span class="no" aria-label="Not its focus">—</span></td><td><span class="yes" aria-label="Yes">✓</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="footnote">✓ yes · ◐ partly, or only in some products · — not its focus. Categories, not specific products, as of October 2026; individual products vary, and some FinOps platforms now offer cost per deployment. CostTrace works alongside them: when a budget alert fires, it shows which deploys coincide with the change.</p>
       </div>
     </section>
 
@@ -554,7 +525,8 @@ ORDERS-DB   +$578.92/mo (affected)
       <span>© 2026 CostTrace</span>
       <span>
         <a href="mailto:founder@costtrace.io">founder@costtrace.io</a> ·
-        <a href="mailto:security@costtrace.io">security@costtrace.io</a>
+        <a href="mailto:security@costtrace.io">security@costtrace.io</a> ·
+        <a href="https://x.com/costtrace" rel="me noopener" aria-label="CostTrace on X" style="white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:-2px"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> @costtrace</a>
       </span>
       <p class="program">CostTrace is part of the Claude Startups program. It stays local-first: your billing data is never sent to Anthropic, or to anyone else.</p>
     </div>

@@ -15,3 +15,4 @@ Key ideas:
 ## Contact
 - Early access and questions: founder@costtrace.io
 - Security: security@costtrace.io
+- X: https://x.com/costtrace
